@@ -185,16 +185,16 @@ template hydraS3(registryTreeHeight, accountsTreeHeight) {
   // other wise it's the source Account that is used
   signal vaultSecretHashedForProofIdentifierHash;
   component vaultSecretHashedForProofIdentifierHasher = Poseidon(3);
-  sourceSecretHasher.inputs[0] <== vaultSecret;
-  sourceSecretHasher.inputs[1] <== sourceVaultNamespace;   
-  sourceSecretHasher.inputs[2] <== 1;
+  vaultSecretHashedForProofIdentifierHasher.inputs[0] <== vaultSecret;
+  vaultSecretHashedForProofIdentifierHasher.inputs[1] <== sourceVaultNamespace;   
+  vaultSecretHashedForProofIdentifierHasher.inputs[2] <== 1;
   vaultSecretHashedForProofIdentifierHash <== vaultSecretHashedForProofIdentifierHasher.out;
 
   // If the sourceIdentifier is made using the vaultSecret and the sourceVaultNamespace 
   // then we use the vaultSecretHashedForProofIdentifierHash
   // otherwise we use the sourceSecretHash
   signal secretHashForProofIdentifier;
-  secretHashForProofIdentifier <== sourceIdentifierVerifiedByVaultSecret * (1 - sourceVaultNamespaceIsZero.out) + sourceSecretHash * sourceVaultNamespaceIsZero.out; 
+  secretHashForProofIdentifier <== (vaultSecretHashedForProofIdentifierHash - sourceSecretHash) * sourceVaultNamespaceIsZero.out + vaultSecretHashedForProofIdentifierHash; 
 
   // Verify if the requestIdentifier is 0 then we don't verify the proofIdentifier
   component requestIdentifierIsZero = IsZero();
