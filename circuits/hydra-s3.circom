@@ -19,6 +19,7 @@ template hydraS3(registryTreeHeight, accountsTreeHeight) {
   signal input sourceSecret;
   signal input vaultSecret;
   signal input sourceVaultNamespace;
+  signal input destinationVaultNamespace;
   signal input sourceCommitmentReceipt[3];
   signal input destinationSecret; 
   signal input destinationCommitmentReceipt[3];
@@ -44,11 +45,16 @@ template hydraS3(registryTreeHeight, accountsTreeHeight) {
   signal input sourceVerificationEnabled;
   signal input destinationVerificationEnabled;
 
-  // Verify if the vaultNamespace is 0 then we don't verify the vaultIdentifier
+  // In the following we verify the proof of ownership of the source identifier.
+  // There is 2 ways to verify it:
+  // - using a vault secret and a sourceVaultNamespace
+  // - using an Hydra Delegated Proof of Ownership 
+
+  // Verify if the sourceVaultNamespace is 0 then we don't verify the sourceIdentifier as a vault
   component sourceVaultNamespaceIsZero = IsZero();
   sourceVaultNamespaceIsZero.in <== sourceVaultNamespace;
 
-  // Verify vaultId as source using vault secret and sourceVaultNamespace
+  // Verify sourceIdentifier as source using vault secret and sourceVaultNamespace
   component sourceVaultIdentifierHasher = Poseidon(2);
   sourceVaultIdentifierHasher.inputs[0] <== vaultSecret;
   sourceVaultIdentifierHasher.inputs[1] <== sourceVaultNamespace;
@@ -73,13 +79,33 @@ template hydraS3(registryTreeHeight, accountsTreeHeight) {
   sourceCommitmentVerification.commitmentReceipt[2] <== sourceCommitmentReceipt[2];
 
 
+  // In the following we verify the proof of ownership of the destination identifier.
+  // There is 2 ways to verify it:
+  // - using a vault secret and a sourceVaultNamespace
+  // - using an Hydra Delegated Proof of Ownership 
+
+  // Verify if the destinationVaultNamespace is 0 then we don't verify the destinationIdentifier as a vault
+  component destinationVaultNamespaceIsZero = IsZero();
+  destinationVaultNamespaceIsZero.in <== destinationVaultNamespace;
+
+  // Verify destinationIdentifier using vault secret and destinationVaultNamespace
+  component destinationVaultIdentifierHasher = Poseidon(2);
+  destinationVaultIdentifierHasher.inputs[0] <== vaultSecret;
+  destinationVaultIdentifierHasher.inputs[1] <== destinationVaultNamespace;
+  // check the constraint only if sourceVaultNamespace is not 0
+  
+  signal destinationIdentifierVerifiedByVaultSecret;
+  destinationIdentifierVerifiedByVaultSecret <== (destinationVaultIdentifierHasher.out - destinationIdentifier) * (1 - destinationVaultNamespaceIsZero.out);
+  // if destination verificationEnabled is 0 this constraint is not checked
+  destinationIdentifierVerifiedByVaultSecret * destinationVerificationEnabled === 0;
+
   // Verify the destination account went through the Hydra Delegated Proof of Ownership
   // That means the user own the destination address
   component destinationCommitmentVerification = VerifyHydraCommitment();
   destinationCommitmentVerification.address <== destinationIdentifier;
   destinationCommitmentVerification.vaultSecret <== vaultSecret; 
   destinationCommitmentVerification.accountSecret <== destinationSecret; 
-  destinationCommitmentVerification.enabled <== destinationVerificationEnabled; 
+  destinationCommitmentVerification.enabled <== destinationVaultNamespaceIsZero.out * destinationVerificationEnabled; 
   destinationCommitmentVerification.commitmentMapperPubKey[0] <== commitmentMapperPubKey[0];
   destinationCommitmentVerification.commitmentMapperPubKey[1] <== commitmentMapperPubKey[1];
   destinationCommitmentVerification.commitmentReceipt[0] <== destinationCommitmentReceipt[0];
@@ -168,7 +194,7 @@ template hydraS3(registryTreeHeight, accountsTreeHeight) {
   // then we use the vaultSecretHashedForProofIdentifierHash
   // otherwise we use the sourceSecretHash
   signal secretHashForProofIdentifier;
-  secretHashForProofIdentifier <== sourceIdentifierVerifiedByVaultSecret * (1 - sourceVaultNamespaceIsZero.out) + sourceSecretHash * sourceVaultNamespaceIsZero; 
+  secretHashForProofIdentifier <== sourceIdentifierVerifiedByVaultSecret * (1 - sourceVaultNamespaceIsZero.out) + sourceSecretHash * sourceVaultNamespaceIsZero.out; 
 
   // Verify if the requestIdentifier is 0 then we don't verify the proofIdentifier
   component requestIdentifierIsZero = IsZero();
