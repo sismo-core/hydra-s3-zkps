@@ -154,16 +154,31 @@ template hydraS3(registryTreeHeight, accountsTreeHeight) {
   sourceSecretHasher.inputs[1] <== 1;  
   sourceSecretHash <== sourceSecretHasher.out; 
 
+  // compute the vaultSecret Hash for used as an entropy for the ProofIdentifier value
+  // Only used if using a vault data source 
+  // other wise it's the source Account that is used
+  signal vaultSecretHashedForProofIdentifierHash;
+  component vaultSecretHashedForProofIdentifierHasher = Poseidon(3);
+  sourceSecretHasher.inputs[0] <== vaultSecret;
+  sourceSecretHasher.inputs[1] <== sourceVaultNamespace;   
+  sourceSecretHasher.inputs[2] <== 1;
+  vaultSecretHashedForProofIdentifierHash <== vaultSecretHashedForProofIdentifierHasher.out;
+
+  // If the sourceIdentifier is made using the vaultSecret and the sourceVaultNamespace 
+  // then we use the vaultSecretHashedForProofIdentifierHash
+  // otherwise we use the sourceSecretHash
+  signal secretHashForProofIdentifier;
+  secretHashForProofIdentifier <== sourceIdentifierVerifiedByVaultSecret * (1 - sourceVaultNamespaceIsZero.out) + sourceSecretHash * sourceVaultNamespaceIsZero; 
 
   // Verify if the requestIdentifier is 0 then we don't verify the proofIdentifier
   component requestIdentifierIsZero = IsZero();
   requestIdentifierIsZero.in <== requestIdentifier;
 
   // Verify the proofIdentifier is valid
-  // by hashing the sourceSecretHash and requestIdentifier
+  // by hashing the secretHashForProofIdentifier and requestIdentifier
   // and verifying the result is equals
   component proofIdentifierHasher = Poseidon(2);
-  proofIdentifierHasher.inputs[0] <== sourceSecretHash;
+  proofIdentifierHasher.inputs[0] <== secretHashForProofIdentifier;
   proofIdentifierHasher.inputs[1] <== requestIdentifier;
   // Check the proofIdentifier is valid only if requestIdentifier is not 0
   (proofIdentifierHasher.out - proofIdentifier) * (1-requestIdentifierIsZero.out) === 0;
