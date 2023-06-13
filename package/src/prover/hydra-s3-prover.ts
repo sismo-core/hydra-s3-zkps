@@ -12,7 +12,7 @@ import { wasmPath, zkeyPath } from "./files";
 import { SnarkProof } from "./snark-proof";
 import { Inputs } from "./types";
 import { verifyCommitment } from "./utils/verify-commitment";
-import { isSourceHydraS3Account } from "./utils/isSourceHydraS3Account";
+import { isHydraS3Account } from "./utils/isHydraS3Account";
 
 export type CircuitPath = { wasmPath: string; zkeyPath: string } | null;
 
@@ -46,8 +46,8 @@ export type ClaimInput = {
   accountsTree: KVMerkleTree;
 };
 
-export type DestinationInput = Partial<HydraS3Account> & {
-  verificationEnabled: boolean;
+export type DestinationInput = (HydraS3Account | VaultAccount) & { 
+  verificationEnabled: boolean 
 };
 
 export type UserParams = {
@@ -67,6 +67,7 @@ export type formattedUserParams = {
   sourceIdentifier: BigInt;
   sourceSecret: BigInt;
   sourceCommitmentReceipt: BigInt[];
+  destinationVaultNamespace: BigInt;
   destinationIdentifier: BigInt;
   destinationSecret: BigInt;
   destinationCommitmentReceipt: BigInt[];
@@ -101,42 +102,58 @@ export class HydraS3Prover {
   }: UserParams): Promise<formattedUserParams> {
     const poseidon = await buildPoseidon();
 
-    if (vault?.secret && source?.secret && !isSourceHydraS3Account(source) && !BigNumber.from(vault.secret).eq(source?.secret)) {
+    if (vault?.secret && source?.secret && !isHydraS3Account(source) && !BigNumber.from(vault.secret).eq(source?.secret)) {
       throw new Error("vault.secret must be identical to source.secret");
     }
+    if (vault?.secret && destination?.secret && !isHydraS3Account(destination) && !BigNumber.from(vault.secret).eq(destination?.secret)) {
+      throw new Error("vault.secret must be identical to destination.secret");
+    }
     const vaultSecret = BigNumber.from(vault?.secret ?? source?.secret).toBigInt();
-
     const vaultNamespace = BigNumber.from(vault?.namespace ?? 0).toBigInt();
-    const vaultIdentifier = vault?.namespace ? poseidon([vaultSecret, vaultNamespace]).toBigInt() : BigNumber.from(0).toBigInt();
+    const vaultIdentifier = vault?.namespace ? poseidon([vaultSecret, vaultNamespace]).toBigInt() : BigInt(0);
 
     const mapArrayToBigInt = (arr: BigNumberish[]) =>
       arr.map((el) => BigNumber.from(el).toBigInt());
 
     const sourceIdentifier = BigNumber.from(source?.identifier ?? 0).toBigInt();
     let sourceCommitmentReceipt = [BigInt(0), BigInt(0), BigInt(0)];
-    let sourceSecret = BigNumber.from(0).toBigInt();
-    let sourceVaultNamespace = BigNumber.from(0).toBigInt();
+    let sourceSecret = BigInt(0);
+    let sourceVaultNamespace = BigInt(0);
+    let sourceSecretHash = poseidon([sourceSecret, 1]);
 
-    if (source && isSourceHydraS3Account(source)) {
+    if (source && isHydraS3Account(source)) {
       source = source as HydraS3Account & { verificationEnabled: boolean };
-      sourceCommitmentReceipt = mapArrayToBigInt(source.commitmentReceipt);
+      if (source.verificationEnabled) {
+        sourceCommitmentReceipt = mapArrayToBigInt(source.commitmentReceipt);
+      }
       sourceSecret = BigNumber.from(source.secret).toBigInt();
+      sourceSecretHash = poseidon([sourceSecret, 1]);
     }
-    if (source && !isSourceHydraS3Account(source)) {
+    if (source && !isHydraS3Account(source)) {
       source = source as VaultAccount & { verificationEnabled: boolean };
       sourceVaultNamespace = BigNumber.from(source.namespace).toBigInt();
+      sourceSecret = BigNumber.from(source.secret).toBigInt();
+      sourceSecretHash = poseidon([sourceSecret, sourceVaultNamespace, 1]);
     }
 
-    const destinationIdentifier = BigNumber.from(
-      destination?.identifier ?? 0
-    ).toBigInt();
-    const destinationSecret = BigNumber.from(
-      destination?.secret ?? 0
-    ).toBigInt();
-    const destinationCommitmentReceipt = destination?.commitmentReceipt
-      ? mapArrayToBigInt(destination?.commitmentReceipt)
-      : [BigInt(0), BigInt(0), BigInt(0)];
-    const sourceSecretHash = poseidon([sourceSecret, 1]);
+    const destinationIdentifier = BigNumber.from(destination?.identifier ?? 0).toBigInt();
+    let destinationCommitmentReceipt = [BigInt(0), BigInt(0), BigInt(0)];
+    let destinationSecret = BigInt(0);
+    let destinationVaultNamespace = BigInt(0);
+
+    if (destination && isHydraS3Account(destination)) {
+      destination = destination as HydraS3Account & { verificationEnabled: boolean }
+      if (destination.verificationEnabled) {
+        destinationCommitmentReceipt = mapArrayToBigInt(destination.commitmentReceipt);
+      }
+      destinationSecret = BigNumber.from(destination.secret).toBigInt();
+    }
+    if (destination && !isHydraS3Account(destination)) {
+      destination = destination as VaultAccount & { verificationEnabled: boolean }
+      destinationVaultNamespace = BigNumber.from(destination.namespace).toBigInt();
+      destinationSecret = BigNumber.from(destination.secret).toBigInt();
+    }
+
     const requestIdentifier = BigNumber.from(
       requestIdentifierInput ?? 0
     ).toBigInt();
@@ -147,7 +164,6 @@ export class HydraS3Prover {
         : BigInt(0);
 
     const claimValue = BigNumber.from(claim?.value ?? 0).toBigInt();
-    // requestIdentifier = BigNumber.from(requestIdentifier ?? 0);
 
     const claimComparator =
       claim?.comparator === 1 ? BigInt(1) : BigInt(0);
@@ -167,6 +183,7 @@ export class HydraS3Prover {
       sourceIdentifier,
       sourceSecret,
       sourceCommitmentReceipt,
+      destinationVaultNamespace,
       destinationIdentifier,
       destinationSecret,
       destinationCommitmentReceipt,
@@ -196,6 +213,7 @@ export class HydraS3Prover {
       sourceIdentifier,
       sourceSecret,
       sourceCommitmentReceipt,
+      destinationVaultNamespace,
       destinationIdentifier,
       destinationSecret,
       destinationCommitmentReceipt,
@@ -230,7 +248,7 @@ export class HydraS3Prover {
     const mapArrayToBigInt = (arr: BigNumberish[]) =>
       arr.map((el) => BigNumber.from(el).toBigInt());
 
-    const zeroPaddedSourceIdentifier = sourceVaultNamespace ? ethers.utils.hexlify(BigNumber.from(sourceIdentifier)) : ethers.utils.hexZeroPad(
+    const zeroPaddedSourceIdentifier = BigNumber.from(sourceIdentifier).toHexString().length > 20 ? ethers.utils.hexlify(BigNumber.from(sourceIdentifier)) : ethers.utils.hexZeroPad(
         ethers.utils.hexlify(BigNumber.from(sourceIdentifier)),
         20
       );
@@ -265,6 +283,7 @@ export class HydraS3Prover {
       sourceSecret,
       sourceVaultNamespace,
       sourceCommitmentReceipt,
+      destinationVaultNamespace,
       destinationSecret,
       destinationCommitmentReceipt,
       accountsTreeRoot,
@@ -311,6 +330,7 @@ export class HydraS3Prover {
       sourceIdentifier,
       sourceSecret,
       sourceCommitmentReceipt,
+      destinationVaultNamespace,
       destinationIdentifier,
       destinationSecret,
       destinationCommitmentReceipt,
@@ -350,7 +370,7 @@ export class HydraS3Prover {
         throw new Error("Invalid Accounts tree height");
 
       let sourceValue;
-      const zeroPaddedSourceIdentifier = sourceVaultNamespace ? ethers.utils.hexlify(BigNumber.from(sourceIdentifier)) : ethers.utils.hexZeroPad(
+      const zeroPaddedSourceIdentifier = BigNumber.from(sourceIdentifier).toHexString().length > 20 ? ethers.utils.hexlify(BigNumber.from(sourceIdentifier)) : ethers.utils.hexZeroPad(
           ethers.utils.hexlify(BigNumber.from(sourceIdentifier)),
           20
         );
@@ -382,7 +402,7 @@ export class HydraS3Prover {
       }
     }
 
-    if (sourceVerificationEnabled && isSourceHydraS3Account(source)) {
+    if (sourceVerificationEnabled && isHydraS3Account(source)) {
       const isSourceCommitmentValid = await verifyCommitment(
         sourceIdentifier,
         vaultSecret,
@@ -394,15 +414,15 @@ export class HydraS3Prover {
         throw new Error("Invalid source commitment receipt");
     }
 
-    if (sourceVerificationEnabled && !isSourceHydraS3Account(source)) {
+    if (sourceVerificationEnabled && !isHydraS3Account(source)) {
       const poseidon = await buildPoseidon();
       const sourceVaultId = poseidon([vaultSecret, sourceVaultNamespace]);
       if (!sourceVaultId.eq(BigNumber.from(sourceIdentifier))) {
-        throw new Error("Invalid source namespace");
+        throw new Error("Invalid source namespace or secret");
       }
     }
 
-    if (destinationVerificationEnabled) {
+    if (destinationVerificationEnabled && isHydraS3Account(destination)) {
       const isDestinationCommitmentValid = await verifyCommitment(
         destinationIdentifier,
         vaultSecret,
@@ -412,6 +432,14 @@ export class HydraS3Prover {
       );
       if (!isDestinationCommitmentValid)
         throw new Error("Invalid destination commitment receipt");
+    }
+
+    if (destinationVerificationEnabled && !isHydraS3Account(destination)) {
+      const poseidon = await buildPoseidon();
+      const destinationVaultId = poseidon([vaultSecret, destinationVaultNamespace]);
+      if (!destinationVaultId.eq(BigNumber.from(destinationIdentifier))) {
+        throw new Error("Invalid destination namespace or secret");
+      }
     }
 
     const SnarkField = SNARK_FIELD.toBigInt();

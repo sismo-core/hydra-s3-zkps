@@ -193,8 +193,9 @@ template hydraS3(registryTreeHeight, accountsTreeHeight) {
   // If the sourceIdentifier is made using the vaultSecret and the sourceVaultNamespace 
   // then we use the vaultSecretHashedForProofIdentifierHash
   // otherwise we use the sourceSecretHash
+
   signal secretHashForProofIdentifier;
-  secretHashForProofIdentifier <== (vaultSecretHashedForProofIdentifierHash - sourceSecretHash) * sourceVaultNamespaceIsZero.out + vaultSecretHashedForProofIdentifierHash; 
+  secretHashForProofIdentifier <== (sourceSecretHash - vaultSecretHashedForProofIdentifierHash) * sourceVaultNamespaceIsZero.out + vaultSecretHashedForProofIdentifierHash; 
 
   // Verify if the requestIdentifier is 0 then we don't verify the proofIdentifier
   component requestIdentifierIsZero = IsZero();

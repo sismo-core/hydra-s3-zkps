@@ -4,6 +4,7 @@ export type PrivateInputs = {
   sourceVaultNamespace: BigInt;
   vaultSecret: BigInt;
   sourceCommitmentReceipt: BigInt[];
+  destinationVaultNamespace: BigInt;
   destinationSecret: BigInt;
   destinationCommitmentReceipt: BigInt[];
   accountMerklePathElements: BigInt[];

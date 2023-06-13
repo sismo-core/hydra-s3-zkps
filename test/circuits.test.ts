@@ -35,6 +35,7 @@ describe("Hydra S3 Circuits", () => {
   let poseidon: Poseidon;
   let inputs: PublicInputs & PrivateInputs;
   let sourceVaultInputs: PublicInputs & PrivateInputs;
+  let destinationVaultInputs: PublicInputs & PrivateInputs;
   let accountsTree1: KVMerkleTree;
   let merkleTreeData1: MerkleTreeData;
   let accountsTree2: KVMerkleTree;
@@ -45,6 +46,7 @@ describe("Hydra S3 Circuits", () => {
   let extraData: string;
   let source: SourceInput;
   let sourceVault: SourceInput;
+  let destinationVault: DestinationInput;
   let destination: DestinationInput;
   let sourceValue: BigNumber;
   let vault: VaultInput;
@@ -141,6 +143,13 @@ describe("Hydra S3 Circuits", () => {
       secret: vaultSecret,
       verificationEnabled: true,
     };
+
+    destinationVault = {
+      identifier: sourceVaultId,
+      namespace: sourceVaultNamespace,
+      secret: vaultSecret,
+      verificationEnabled: true,
+    };
     source = {
       ...accounts[0],
       verificationEnabled: true,
@@ -155,7 +164,7 @@ describe("Hydra S3 Circuits", () => {
     );
   });
 
-  describe("Generating proof of a claim in the vault thanks to HydraS3Account Source", async () => {
+  describe("Generating proofs", async () => {
     it("Snark proof of vault identifier for a specific vault namespace", async () => {
       const { privateInputs, publicInputs } = await prover.generateInputs({
         vault,
@@ -196,7 +205,7 @@ describe("Hydra S3 Circuits", () => {
         vault,
         source,
         destination: {
-          identifier: destination.identifier,
+          ...destination,
           verificationEnabled: false,
         },
       });
@@ -212,7 +221,7 @@ describe("Hydra S3 Circuits", () => {
         vault,
         source,
         destination: {
-          identifier: destination.identifier,
+          ...destination,
           verificationEnabled: false,
         },
         claim: {
@@ -272,6 +281,21 @@ describe("Hydra S3 Circuits", () => {
       await circuitTester.checkConstraints(w);
     });
 
+
+    it("Snark proof using a VaultAccount as a destination", async () => {
+      const { privateInputs, publicInputs } = await prover.generateInputs({
+        vault,
+        source,
+        destination: destinationVault,
+        requestIdentifier,
+      });
+      
+      destinationVaultInputs = { ...privateInputs, ...publicInputs };
+
+      const w = await circuitTester.calculateWitness(destinationVaultInputs, true);
+      await circuitTester.checkConstraints(w);
+    });
+
     it("Snark proof of simple value in a merkleTree with simple proofIdentifier", async () => {
       const { privateInputs, publicInputs } = await prover.generateInputs({
         vault,
@@ -289,7 +313,8 @@ describe("Hydra S3 Circuits", () => {
       inputs = { ...privateInputs, ...publicInputs };
 
       const w = await circuitTester.calculateWitness(inputs, true);
-      await circuitTester.checkConstraints(w);
+      const res = await circuitTester.checkConstraints(w);
+      console.log("res", res);
     });
   });
 
@@ -372,7 +397,7 @@ describe("Hydra S3 Circuits", () => {
     });
   });
 
-  describe("Verifying source address constraints are good", async () => {
+  describe("Verifying source constraints are good", async () => {
     it("Should throw with wrong source address", async () => {
       await circuitShouldFail(
         circuitTester,
@@ -391,7 +416,7 @@ describe("Hydra S3 Circuits", () => {
         circuitTester,
         {
           ...inputs,
-          ...{ sourceSecret: BigNumber.from(123).toBigInt() },
+          ...{ sourceSecret: BigInt(123) },
         },
         "Error: Assert Failed.\nError in template ForceEqualIfEnabled"
       );
@@ -402,7 +427,7 @@ describe("Hydra S3 Circuits", () => {
         circuitTester,
         {
           ...inputs,
-          ...{ vaultSecret: BigNumber.from(123).toBigInt() },
+          ...{ vaultSecret: BigInt(123) },
         },
         "Error: Assert Failed.\nError in template ForceEqualIfEnabled"
       );
@@ -415,9 +440,9 @@ describe("Hydra S3 Circuits", () => {
           ...inputs,
           ...{
             sourceCommitmentReceipt: [
-              BigNumber.from(1).toBigInt(),
-              BigNumber.from(2).toBigInt(),
-              BigNumber.from(3).toBigInt(),
+              BigInt(1),
+              BigInt(2),
+              BigInt(3),
             ],
           },
         },
@@ -428,7 +453,7 @@ describe("Hydra S3 Circuits", () => {
 
 
   describe("Verifying source constraints using a Vault as a source", async () => {
-    it("Should throw with wrong source address", async () => {
+    it("Should throw with wrong source identifier", async () => {
       await circuitShouldFail(
         circuitTester,
         {
@@ -446,7 +471,7 @@ describe("Hydra S3 Circuits", () => {
         circuitTester,
         {
           ...sourceVaultInputs,
-          ...{ vaultSecret: BigNumber.from(123).toBigInt() },
+          ...{ vaultSecret: BigInt(123) },
         },
         "Error: Assert Failed.\nError in template ForceEqualIfEnabled"
       );
@@ -457,15 +482,62 @@ describe("Hydra S3 Circuits", () => {
         circuitTester,
         {
           ...sourceVaultInputs,
-          ...{ sourceVaultNamespace: BigNumber.from(1).toBigInt() },
+          ...{ sourceVaultNamespace: BigInt(1) },
+        },
+        "Error: Assert Failed.\nError in template ForceEqualIfEnabled"
+      );
+    });
+
+    it("Should throw with wrong proofIdentifier", async () => {
+      await circuitShouldFail(
+        circuitTester,
+        {
+          ...sourceVaultInputs,
+          ...{ proofIdentifier: BigInt(1) },
         },
         "Error: Assert Failed.\nError in template ForceEqualIfEnabled"
       );
     });
   });
 
+  describe("Verifying destination constraints using Vault as a destination", async () => {
+    it("Should throw with wrong destination identifier", async () => {
+      await circuitShouldFail(
+        circuitTester,
+        {
+          ...destinationVaultInputs,
+          ...{
+            destinationIdentifier: BigNumber.from(accounts[1].identifier).toBigInt(),
+          },
+        },
+        "Error: Assert Failed.\nError in template ForceEqualIfEnabled"
+      );
+    });
 
+    it("Should throw with wrong vault secret", async () => {
+      await circuitShouldFail(
+        circuitTester,
+        {
+          ...destinationVaultInputs,
+          ...{ vaultSecret: BigInt(123) },
+        },
+        "Error: Assert Failed.\nError in template ForceEqualIfEnabled"
+      );
+    });
 
+    it("Should throw with wrong namespace", async () => {
+      await circuitShouldFail(
+        circuitTester,
+        {
+          ...destinationVaultInputs,
+          ...{
+            destinationVaultNamespace: BigInt(1)
+          },
+        },
+        "Error: Assert Failed.\nError in template ForceEqualIfEnabled"
+      );
+    });
+  });
 
   describe("Verifying vault constraints are good", async () => {
     it("Should throw with wrong vault identifier", async () => {
@@ -480,10 +552,21 @@ describe("Hydra S3 Circuits", () => {
         "Error: Assert Failed.\nError in template ForceEqualIfEnabled"
       );
     });
+
+    it("Should throw with wrong proofIdentifier", async () => {
+      await circuitShouldFail(
+        circuitTester,
+        {
+          ...sourceVaultInputs,
+          ...{ proofIdentifier: BigInt(1) },
+        },
+        "Error: Assert Failed.\nError in template ForceEqualIfEnabled"
+      );
+    });
   });
 
-  describe("Verifying destination address constraints are good", async () => {
-    it("Should throw with wrong destination address", async () => {
+  describe("Verifying destination constraints are good", async () => {
+    it("Should throw with wrong destination identifier", async () => {
       await circuitShouldFail(
         circuitTester,
         {
@@ -503,7 +586,7 @@ describe("Hydra S3 Circuits", () => {
         circuitTester,
         {
           ...inputs,
-          ...{ destinationSecret: BigNumber.from(123).toBigInt() },
+          ...{ destinationSecret: BigInt(123) },
         },
         "Error: Assert Failed.\nError in template ForceEqualIfEnabled"
       );
@@ -516,9 +599,9 @@ describe("Hydra S3 Circuits", () => {
           ...inputs,
           ...{
             destinationCommitmentReceipt: [
-              BigNumber.from(1).toBigInt(),
-              BigNumber.from(2).toBigInt(),
-              BigNumber.from(3).toBigInt(),
+              BigInt(1),
+              BigInt(2),
+              BigInt(3),
             ],
           },
         },
@@ -533,8 +616,8 @@ describe("Hydra S3 Circuits", () => {
           ...inputs,
           ...{
             commitmentMapperPubKey: [
-              BigNumber.from(1).toBigInt(),
-              BigNumber.from(2).toBigInt(),
+              BigInt(1),
+              BigInt(2),
             ],
           },
         },
@@ -579,7 +662,7 @@ describe("Hydra S3 Circuits", () => {
         circuitTester,
         {
           ...inputs,
-          ...{ accountsTreeRoot: BigNumber.from(123).toBigInt() }, // changing only the merkle Root
+          ...{ accountsTreeRoot: BigInt(123) }, // changing only the merkle Root
         },
         "Error: Assert Failed.\nError in template ForceEqualIfEnabled"
       );
@@ -716,7 +799,7 @@ describe("Hydra S3 Circuits", () => {
           ...inputs,
           ...{
             claimComparator: BigInt(1),
-            claimValue: BigNumber.from(3).toBigInt(),
+            claimValue: BigInt(3),
           }, // the good one is value: 4
         },
         "Error: Assert Failed.\nError in template ForceEqualIfEnabled"
