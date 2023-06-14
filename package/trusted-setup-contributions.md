@@ -1,106 +1,161 @@
-Contribution made by gabinh.sismo.eth on Mars 13th, 2023
+Contribution made by gabinh.sismo.eth on June 14th, 2023
 
 [INFO]  snarkJS: Circuit Hash:
-    e86dd8a0 aa090929 e2d8d3ef 3c9c1f10
-    769556c2 ce8b1f3f 7e50c77a 03659dd6
-    f582ea44 4668787a 7327ccbc 23f28b2b
-    e35e6a7d fdc6139c 62e9782d a186eeed
+		663cc4ab 03ecbbe3 18f57a39 2523ca8b
+		f78925c7 dc6d6695 1bbbfc62 48a8afcc
+		73567869 098ba10d 13bfc4b1 f38c344d
+		06c6cd64 85bad0b2 0d8c1917 79ea94a7
 [INFO]  snarkJS: Contribution Hash:
-    f13661b2 b32b5db8 b10711ca e42b2bf8
-    4c189eae 5dadd57f 71930b18 ff854f98
-    4c1d7dfc bfa7b3c4 ba0174d0 09fcbc7b
-    cf0f2712 7340a8cf 18437a3f f3415ce5
+		5afc5be8 cd063156 988c2625 3d6ea880
+		fe8b8d6a 3074e29c 48343250 9dcef66c
+		76b4c2dc 6be2d011 b2def843 ed44bf4b
+		30a8f4ee e046fda1 6861b8b9 e6a5f359
 
 
-Contribution made by leo21.sismo.eth on Mars 13th, 2023
+Contribution made by bigq11.eth on June 14th, 2023
 
 [INFO]  snarkJS: Circuit Hash:
-    e86dd8a0 aa090929 e2d8d3ef 3c9c1f10
-    769556c2 ce8b1f3f 7e50c77a 03659dd6
-    f582ea44 4668787a 7327ccbc 23f28b2b
-    e35e6a7d fdc6139c 62e9782d a186eeed
+		663cc4ab 03ecbbe3 18f57a39 2523ca8b
+		f78925c7 dc6d6695 1bbbfc62 48a8afcc
+		73567869 098ba10d 13bfc4b1 f38c344d
+		06c6cd64 85bad0b2 0d8c1917 79ea94a7
 [INFO]  snarkJS: Contribution Hash:
-    78636e21 16336cf4 5463eb94 d3dd317a
-    054e4a3b 6a56e28c cf1731a6 0bc22140
-    b0eda21f c3776cf8 b66a0eda b60eb461
-    9e2008da 5eb32405 fe50e9cc 6be39664
+		a07ee707 f80cdc89 13751103 05c1b9ad
+		0fed0814 9a24a97a 1cd83a96 4d6d0b55
+		cfc6c06c cdb3d9ee 9536d001 05a965fe
+		67d421d4 0ce3cae8 4b4900fe d8e7709b
 
 
-Contribution made by bigq on Mars 13th, 2023
+Contribution made by ben.anoufa.eth on June 14th, 2023
 
 [INFO]  snarkJS: Circuit Hash:
-    e86dd8a0 aa090929 e2d8d3ef 3c9c1f10
-    769556c2 ce8b1f3f 7e50c77a 03659dd6
-    f582ea44 4668787a 7327ccbc 23f28b2b
-    e35e6a7d fdc6139c 62e9782d a186eeed
+		663cc4ab 03ecbbe3 18f57a39 2523ca8b
+		f78925c7 dc6d6695 1bbbfc62 48a8afcc
+		73567869 098ba10d 13bfc4b1 f38c344d
+		06c6cd64 85bad0b2 0d8c1917 79ea94a7
 [INFO]  snarkJS: Contribution Hash:
-    f8e62675 1242f83d 0f84fdcc be3b2121
-    11413c56 15d0a3ee ae3d4e03 c9554c25
-    06eb1e31 29d229bf cd4e0f55 57310aed
-    9bd90e0c d6812e86 175724c9 f9692350 
+		9d983a7f 8ec7908b 09355101 c94e6515
+		2959b04a b20a18eb f4159f74 1f01ed6a
+		e70f84fc 902b4dfd f784da11 2d1ecd35
+		ffc4e216 6e1c9a93 c80ad15c 059c0c83
 
 
-Contribution made by martingbz.eth on Mars 13th, 2023
+Contribution made by dhadrien.sismo.eth on June 14th, 2023
 
 [INFO]  snarkJS: Circuit Hash:
-    e86dd8a0 aa090929 e2d8d3ef 3c9c1f10
-    769556c2 ce8b1f3f 7e50c77a 03659dd6
-    f582ea44 4668787a 7327ccbc 23f28b2b
-    e35e6a7d fdc6139c 62e9782d a186eeed
-
+		663cc4ab 03ecbbe3 18f57a39 2523ca8b
+		f78925c7 dc6d6695 1bbbfc62 48a8afcc
+		73567869 098ba10d 13bfc4b1 f38c344d
+		06c6cd64 85bad0b2 0d8c1917 79ea94a7
 [INFO]  snarkJS: Contribution Hash:
-    cee66328 1cee0300 957ffdc2 45133255
-    db9a80e5 2559445c 494350b4 76e6e26a
-    5ce64f57 65082267 89f6af74 c023f441
-    62afc424 e263cd02 3b2353f1 00cb6dcc
+		d2cbb744 eb220a61 ded365c4 d53506b5
+		684c63bd a166a889 07aa0eb7 06cfa618
+		8c67f8bb ac639101 b7d7c453 207c365f
+		501d0e04 3ef17cc0 c5f0f62b 3d52978c
 
 
-Contribution made by anoufa.eth on Mars 13th, 2023
+Contribution made by apele.eth on June 14th, 2023
+
+[INFO]  snarkJS: Circuit Hash:
+		663cc4ab 03ecbbe3 18f57a39 2523ca8b
+		f78925c7 dc6d6695 1bbbfc62 48a8afcc
+		73567869 098ba10d 13bfc4b1 f38c344d
+		06c6cd64 85bad0b2 0d8c1917 79ea94a7
+[INFO]  snarkJS: Contribution Hash:
+		e97bf274 4ddd327e dbcedc12 ef973086
+		dd2d5963 c241f34a ef6cafd8 02f591b4
+		92ac137d 99505f4a 746af2bc aa5ea9a4
+		12d1fcc1 4cfc00ab dd6e412a 7c5d7986
+
+
+Contribution made by leo21.sismo.eth on June 14th, 2023
+
+[INFO]  snarkJS: Circuit Hash:
+		663cc4ab 03ecbbe3 18f57a39 2523ca8b
+		f78925c7 dc6d6695 1bbbfc62 48a8afcc
+		73567869 098ba10d 13bfc4b1 f38c344d
+		06c6cd64 85bad0b2 0d8c1917 79ea94a7
+[INFO]  snarkJS: Contribution Hash:
+		a2c301f1 6b9be50a 643fe68d 2a1fcc61
+		451a2450 28ff2737 30bbbd41 e44c879d
+		765ee173 e1a5b6ec a420ac1a 6fc625c6
+		bc331ea8 ccf5a3a7 361b483b e77a74b2
+
+
+Contribution made by zkentin.eth on June 14th, 2023
+
+[INFO]  snarkJS: Circuit Hash:
+		663cc4ab 03ecbbe3 18f57a39 2523ca8b
+		f78925c7 dc6d6695 1bbbfc62 48a8afcc
+		73567869 098ba10d 13bfc4b1 f38c344d
+		06c6cd64 85bad0b2 0d8c1917 79ea94a7
+[INFO]  snarkJS: Contribution Hash:
+		fee7ab94 f7bec96b a26fe0a2 f2bcf05e
+		b2f8c1ec a0b4ca4d 87ec8b04 41318100
+		cfd45e4e b89a24b9 99ef3741 55f2a383
+		70d194b1 8b33ddb3 7f28cc7d 97020c28
+
+
+Contribution made by kugusha.eth on June 14th, 2023
+
+[INFO]  snarkJS: Circuit Hash:
+		663cc4ab 03ecbbe3 18f57a39 2523ca8b
+		f78925c7 dc6d6695 1bbbfc62 48a8afcc
+		73567869 098ba10d 13bfc4b1 f38c344d
+		06c6cd64 85bad0b2 0d8c1917 79ea94a7
+[INFO]  snarkJS: Contribution Hash:
+		54aa764c dab05b12 2d5bdd4e c2e02c66
+		19caf52e 989e6c6f af5ce7f6 b7f377e8
+		3e2da4dc 8acd1dc0 fdd545f9 de540bc7
+		cf9ff882 8532e3d7 584accdd 32ccc4e2
+
+
+Contribution made by martingbz.eth on June 14th, 2023
+
+[INFO]  snarkJS: Circuit Hash:
+		663cc4ab 03ecbbe3 18f57a39 2523ca8b
+		f78925c7 dc6d6695 1bbbfc62 48a8afcc
+		73567869 098ba10d 13bfc4b1 f38c344d
+		06c6cd64 85bad0b2 0d8c1917 79ea94a7
+[INFO]  snarkJS: Contribution Hash:
+		801503d6 ae2f7bf8 ae177348 c7c08e41
+		daa3a941 907e7300 58505747 ea56a32c
+		fa11237f 0cb1a196 c0ba4e8a 40ad507b
+		3526c164 74a0931d 3b9935be 1b9d0be8
+
+
+Contribution made by martingbz.eth on June 14th, 2023
+
+[INFO]  snarkJS: Circuit Hash:
+		663cc4ab 03ecbbe3 18f57a39 2523ca8b
+		f78925c7 dc6d6695 1bbbfc62 48a8afcc
+		73567869 098ba10d 13bfc4b1 f38c344d
+		06c6cd64 85bad0b2 0d8c1917 79ea94a7
+[INFO]  snarkJS: Contribution Hash:
+		801503d6 ae2f7bf8 ae177348 c7c08e41
+		daa3a941 907e7300 58505747 ea56a32c
+		fa11237f 0cb1a196 c0ba4e8a 40ad507b
+		3526c164 74a0931d 3b9935be 1b9d0be8
+
+
+Contribution made by Oleksandr Brezhniev on June 14th, 2023
 
 [INFO]  snarkJS: Circuit Hash: 
-    e86dd8a0 aa090929 e2d8d3ef 3c9c1f10
-    769556c2 ce8b1f3f 7e50c77a 03659dd6
-    f582ea44 4668787a 7327ccbc 23f28b2b
-    e35e6a7d fdc6139c 62e9782d a186eeed
+        663cc4ab 03ecbbe3 18f57a39 2523ca8b
+        f78925c7 dc6d6695 1bbbfc62 48a8afcc
+        73567869 098ba10d 13bfc4b1 f38c344d
+        06c6cd64 85bad0b2 0d8c1917 79ea94a7
 [INFO]  snarkJS: Contribution Hash: 
-    5f0fbc8e 15850541 cefdc049 455b0b49
-    bd0f9eb7 b165adef df10cc05 19a1be1d
-    cc713b46 0b101288 9ceaa005 5827c5a0
-    9e55c8bd 3aa9470a c21fa942 5c44a278
-
-
-Contribution made by dhadrien.sismo.eth on Mars 13th, 2023
-
-[INFO]  snarkJS: Circuit Hash:
-        e86dd8a0 aa090929 e2d8d3ef 3c9c1f10
-        769556c2 ce8b1f3f 7e50c77a 03659dd6
-        f582ea44 4668787a 7327ccbc 23f28b2b
-        e35e6a7d fdc6139c 62e9782d a186eeed
-[INFO]  snarkJS: Contribution Hash:
-        d8af1584 f4e46500 1f080b98 98db3b6d
-        6843c993 15e19ab7 2b5f22cb 15b67651
-        474ed70e 639e6a84 1987b5db afe4445e
-        696edbf7 77abb2c1 d4c068a4 10dcb9c2
-
-
-Contribution made by jrag.eth on Mars 13th, 2023
-
-[INFO]  snarkJS: Circuit Hash: 
-    e86dd8a0 aa090929 e2d8d3ef 3c9c1f10
-    769556c2 ce8b1f3f 7e50c77a 03659dd6
-    f582ea44 4668787a 7327ccbc 23f28b2b
-    e35e6a7d fdc6139c 62e9782d a186eeed
-[INFO]  snarkJS: Contribution Hash: 
-    13805555 e168f0b9 a1c3b8c0 24244cf7
-    f6514f09 ba47b4f5 5876e630 bd14423d
-    1544a921 0ff4f5c3 f4d25fed f3d4dfcf
-    ea00ba88 2c3ea216 2924b5ab c38787f8
+        8adb2f13 d6893b6b feed187a 2185534a
+        6ec414a8 290df3fc 38ab7f73 b32bedf6
+        87bd40a1 369f8b21 8b398c51 f96b0305
+        bdfd98ad f876f410 e1d9318b 106b0fde
 
 
 Final Beacon phase
 
 [INFO]  snarkJS: Contribution Hash:
-    7d22efb0 434de31e 896f07b0 878ad958
-    3fba4fca a986d912 0aaf2939 cd9c69b6
-    e0c12d7b d2c7b127 2b73ebef 0ad22133
-    9544c6d9 ed44f312 54145c6d c7d0ae2a
+		9060932b 13f6e5d8 df0e3ef2 d44bd810
+		8e36d9f4 584e83d9 fe15e866 4d62747c
+		58ab9b7a 557b3749 144adaaa f701f227
+		6fb68ef4 c4e9b5a6 c5e45aff 67b7b81a
