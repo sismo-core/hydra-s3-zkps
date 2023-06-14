@@ -25,9 +25,7 @@
   <a href="https://www.sismo.io/" target="_blank"></a>
 </div>
 
-Hydra-S3 is an upgrade of the [Hydra-S2](https://github.com/sismo-core/hydra-s2-zkps) Zero-Knowledge Proving Scheme. The major update involves the ability to verify a vaultIdentifier both as the source account to prove account inclusion in a group and as the destination account to prove ownership of it.
-
-In Hydra-s2, the only way to verify a source or a destination was by checking a commitment receipt, which is a signed commitment. However, Hydra-s3 introduces increased modularity by enabling the verification of ownership for vaultIdentifiers. The ownership of the vaultIdentifier is verified by reconstructing it using the formula: vaultIdentifier = poseidon(vaultSecret, namespace). 
+Hydra-S3 is an upgrade of the [Hydra-S2](https://github.com/sismo-core/hydra-s2-zkps) Zero-Knowledge Proving Scheme. The major update introduces the possibility of using a Vault account both as a source and a destination. Using a Vault account as a source allows for proving its inclusion in a group, while using it as a destination allows for demonstrating ownership. This capability is achieved by switching the account ownership verification method based on the account type. If the account is a Hydra account, we verify the ownership by validating the commitmentReceipt. On the other hand, if it's a Vault account, proving its ownership entails reconstructing the vaultIdentifier using the formula: vaultIdentifier = poseidon(vaultSecret, namespace).
 
 Therefore, Hydra-S3 enables users to generate ZK proofs for the following statements:
 - Ownerships (optional): They own two accounts, a source account and a destination account. (the two are optional, it is possible to only verify the ownership of a single account, or neither of the two)
