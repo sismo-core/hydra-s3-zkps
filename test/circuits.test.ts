@@ -313,8 +313,7 @@ describe("Hydra S3 Circuits", () => {
       inputs = { ...privateInputs, ...publicInputs };
 
       const w = await circuitTester.calculateWitness(inputs, true);
-      const res = await circuitTester.checkConstraints(w);
-      console.log("res", res);
+      await circuitTester.checkConstraints(w);
     });
   });
 
