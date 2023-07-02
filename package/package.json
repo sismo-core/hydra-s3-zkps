@@ -1,6 +1,6 @@
 {
   "name": "@sismo-core/hydra-s3",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "Hydra S3 Proving scheme",
   "license": "MIT",
   "author": "Sismo core",
@@ -23,7 +23,7 @@
   },
   "dependencies": {
     "@sismo-core/crypto": "^1.1.4",
-    "@sismo-core/kv-merkle-tree": "^1.0.4",
+    "@sismo-core/kv-merkle-tree": "^1.1.0",
     "snarkjs": "^0.7.0"
   },
   "publishConfig": {
