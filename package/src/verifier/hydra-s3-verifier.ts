@@ -1,6 +1,6 @@
 import { BigNumber, BigNumberish } from "ethers";
-import { groth16 } from "snarkjs";
 import vKey from "./hydra-s3-verification-key.json";
+const { groth16 } = require("snarkjs");
 
 export class HydraS3Verifier {
   public static async verifyProof(

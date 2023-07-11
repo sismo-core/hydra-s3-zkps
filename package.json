@@ -1,6 +1,6 @@
 {
   "name": "hydra-s3-zkps",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Hydra S3 ZK Proving Scheme",
   "main": "index.js",
   "author": "Sismo core",

@@ -1,6 +1,6 @@
 {
   "name": "@sismo-core/hydra-s3",
-  "version": "1.0.3",
+  "version": "1.0.3-beta.1",
   "description": "Hydra S3 Proving scheme",
   "license": "MIT",
   "author": "Sismo core",
