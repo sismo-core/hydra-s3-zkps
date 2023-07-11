@@ -1,7 +1,6 @@
 import { buildPoseidon, EddsaPublicKey, SNARK_FIELD } from "@sismo-core/crypto";
 import { KVMerkleTree, MerklePath } from "@sismo-core/kv-merkle-tree";
-import { BigNumber, BigNumberish, ethers } from "ethers";
-import { groth16 } from "snarkjs";
+import { BigNumber, BigNumberish } from "ethers";
 import { ACCOUNTS_TREE_HEIGHT, PrivateInputs, PublicInputs, REGISTRY_TREE_HEIGHT } from ".";
 import { wasmPath, zkeyPath } from "./files";
 import { SnarkProof } from "./snark-proof";
@@ -9,6 +8,8 @@ import { Inputs } from "./types";
 import { verifyCommitment } from "./utils/verify-commitment";
 import { isHydraS3Account } from "./utils/isHydraS3Account";
 import { sourceAccountHexFormatter } from "./utils/accounts";
+
+const { groth16 } = require("snarkjs");
 
 export type CircuitPath = { wasmPath: string; zkeyPath: string } | null;
 

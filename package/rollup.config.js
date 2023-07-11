@@ -5,6 +5,7 @@ import packageJson from "./package.json";
 import dts from "rollup-plugin-dts";
 import replace from '@rollup/plugin-replace';
 import json from '@rollup/plugin-json';
+import pkg from "./package.json";
 
 export default [
   {
@@ -22,7 +23,12 @@ export default [
       json(),
       typescript({ tsconfig: "./tsconfig.json" }),
     ],
-    external: ['@sismo-core/kv-merkle-tree', '@sismo-core/crypto', 'snarkjs', 'ethers', 'blake-hash', 'circomlib', 'circomlibjs', 'ffjavascript', 'typescript', 'tslib']
+    external: [
+      '@sismo-core/kv-merkle-tree', 
+      '@sismo-core/crypto', 
+      'snarkjs', 
+      ...Object.keys(pkg.devDependencies || {})
+    ]
   },
   {
     input: "src/index.ts",
@@ -44,7 +50,12 @@ export default [
       }),
       typescript({ tsconfig: "./tsconfig.json" }),
     ],
-    external: ['@sismo-core/kv-merkle-tree', '@sismo-core/crypto', 'snarkjs', 'ethers', 'blake-hash', 'circomlib', 'circomlibjs', 'ffjavascript', 'typescript', 'tslib']
+    external: [
+      '@sismo-core/kv-merkle-tree', 
+      '@sismo-core/crypto', 
+      'snarkjs', 
+      ...Object.keys(pkg.devDependencies || {})
+    ]
   },
   {
     input: "lib/esm/types/index.d.ts",
